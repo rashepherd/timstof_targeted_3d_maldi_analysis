@@ -48,5 +48,5 @@ For help, use: `python run.py --help`. Parameters are also described below.
 
 #### Example Data
 
-Example input data can be found in [data/maldi_ms1_tims_autox.zip](https://github.com/gtluubruker/timstof_targeted_3d_maldi_analysis/blob/main/data/maldi_ms1_tims_autox.zip).<br>
-Example output data can be found in [data/maldi_ms1_tims_autox.zip](https://github.com/gtluubruker/timstof_targeted_3d_maldi_analysis/blob/main/data/maldi_ms1_tims_autox.csv)
+Example input data can be found in [data/maldi_ms1_tims_autox.zip](https://github.com/gtluubruker/timstof_targeted_3d_maldi_analysis/blob/main/data/maldi_ms1_tims_autox.zip) (unzip to find a .d file).<br>
+Example output data can be found in [data/maldi_ms1_tims_autox.csv](https://github.com/gtluubruker/timstof_targeted_3d_maldi_analysis/blob/main/data/maldi_ms1_tims_autox.csv)
