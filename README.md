@@ -2,6 +2,10 @@
 
 This Python script allows for users to extract the summed intensity for a given feature (where a feature is an m/z-1/K0 pair) from MALDI-TIMS-MS data acquired on the timsTOF fleX using timsControl in AutoXecute mode. It is intended for non-imaging automated runs for high throughput screening purposes. The output is a CSV table with the frame where each row is the summed intensity of the feature +/- tolerance for each spot from an MTP plate.
 
+#### macOS IS NOT SUPPORTED!
+
+Bruker's TDF-SDK is currently only compatible with Windows and Linux.
+
 ## Installation
 
 This script has been tested using a conda virtual environment. While other virtual environments or setups may function, there is no guarantee that the script will be compatible with other environments. Instructions to reproduce the environment used during development are below.
