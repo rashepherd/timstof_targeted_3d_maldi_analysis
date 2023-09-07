@@ -27,13 +27,13 @@ For help, use: `python run.py --help`. Parameters are also described below.
 
 #### Parameters
 
-`--input`: File path for Bruker .d file from MALDI AutoXecute run containing TDF file.
-`--outdir`: Path to folder in whch to write output CSV file. Default = same as input path.'
-`--outfile`: User defined filename for output CSV file. Will use the ".d" directory name if none is specified.
-`--mz`: m/z value of interest
-`--mz_tol`: m/z tolerance in Da. Default = 0.05 Da
-`--ook0`: 1/K0 value of interest
-`--ook0_tol`: 1/K0 tolerance. Default = 0.05
+`--input`: File path for Bruker .d file from MALDI AutoXecute run containing TDF file.<br>
+`--outdir`: Path to folder in whch to write output CSV file. Default = same as input path.<br>
+`--outfile`: User defined filename for output CSV file. Will use the ".d" directory name if none is specified.<br>
+`--mz`: m/z value of interest<br>
+`--mz_tol`: m/z tolerance in Da. Default = 0.05 Da<br>
+`--ook0`: 1/K0 value of interest<br>
+`--ook0_tol`: 1/K0 tolerance. Default = 0.05<br>
 
 #### Example Usage
 
