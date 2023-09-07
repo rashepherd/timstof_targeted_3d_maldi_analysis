@@ -10,14 +10,21 @@ This script has been tested using a conda virtual environment. While other virtu
 2. If not installed, install Git from [here](https://git-scm.com/downloads).
 3. Open `Anaconda Prompt`.
 4. Navigate to the directory where you want to store this project.
-5. Example: `cd C:\Users\[username]\Desktop`
-6. In `Anaconda Prompt`, clone this repo from Github using the following command: `git clone https://github.com/gtluubruker/timstof_targeted_3d_maldi_analysis`
+5. Example:
+```cd C:\Users\[username]\Desktop```
+6. In `Anaconda Prompt`, clone this repo from Github using the following command:
+```git clone https://github.com/gtluubruker/timstof_targeted_3d_maldi_analysis```
 7. Navigate to the clone repo.
-8. Example: `cd C:\Users\[username]\Desktop\timstof_targeted_3d_maldi_analysis`
-9. Create a new conda virtual environment: `conda create -n timstof_targeted_3d_maldi_analysis python=3.11`
-10. Activate the venv: `conda activate timstof_targeted_3d_maldi_analysis`
-11. Install Python dependencies: `pip install -r requirements.txt`
-12. You will also need to install the [pyTDFSDK](https://github.com/gtluu/pyTDFSDK) package directly from Github: `pip install git+https://github.com/gtluu/pyTDFSDK`
+8. Example:
+```cd C:\Users\[username]\Desktop\timstof_targeted_3d_maldi_analysis```
+9. Create a new conda virtual environment:
+```conda create -n timstof_targeted_3d_maldi_analysis python=3.11```
+10. Activate the venv:
+```conda activate timstof_targeted_3d_maldi_analysis```
+11. Install Python dependencies:
+```pip install -r requirements.txt```
+12. You will also need to install the [pyTDFSDK](https://github.com/gtluu/pyTDFSDK) package directly from Github:
+```pip install git+https://github.com/gtluu/pyTDFSDK```
 
 ## Usage
 
