@@ -55,7 +55,7 @@ def throw_last_timsdata_error(tdf_sdk):
 
 # class to read in metadata from analysis.tdf file
 # modified from tdf_data class in TIMSCONVERT to only include relevant information
-# class methods were removed; methods for parsing raw Bruker data are now found in pyTDFSDK along with API files
+# class methods were removed; methods for parsing raw Bruker data are now found in pyTDFSDK
 class MaldiTdfData(object):
     def __init__(self, bruker_d_folder_name: str, tdf_sdk_dll, use_recalibrated_state=True):
         self.dll = tdf_sdk_dll
@@ -117,7 +117,7 @@ def run():
     if platform.system() == 'Windows':
         dll_path = os.path.join(os.path.dirname(__file__), 'lib', 'timsdata.dll')
     elif platform.system() == 'Linux':
-        dll_path = os.path.join(os.path.dirname(__file__), 'lib', 'timsdata.dll')
+        dll_path = os.path.join(os.path.dirname(__file__), 'lib', 'timsdata.so')
     dll = init_tdf_sdk_api(dll_path)
     tdf_data = MaldiTdfData(args['input'], dll)
 
