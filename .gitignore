@@ -1,0 +1,14 @@
+*pyc
+/.ipynb_checkpoints
+/.idea
+/shelf/
+/workspace.xml
+/venv
+/prototype
+/depracated
+/data
+/timsconvert.egg-info
+/dist
+/db
+/test/massive.ucsd.edu
+/build
