@@ -53,7 +53,7 @@ For help, use: `python run.py --help`. Parameters are also described below.
 
 #### Example Usage
 ```
-get_feature_intensities --input maldi_ms1_tims_autox/maldi_ms1_tims_autox.d --mz 622.0250 --mz_tol 0.05 --ook0 0.982 --ook0_tol 0.05
+get_feature_intensities --input [path to]/maldi_ms1_tims_autox/maldi_ms1_tims_autox.d --mz 622.0250 --mz_tol 0.05 --ook0 0.982 --ook0_tol 0.05
 ```
 
 #### Example Data
