@@ -51,12 +51,34 @@ For help, use: `python run.py --help`. Parameters are also described below.
 `--ook0`: 1/K0 value of interest<br>
 `--ook0_tol`: 1/K0 tolerance. Default = 0.05<br>
 
-#### Example Usage
+### Examples
+
+Example input data can be found in [data/maldi_ms1_tims_autox.zip](https://github.com/gtluubruker/timstof_targeted_3d_maldi_analysis/blob/main/data/maldi_ms1_tims_autox.zip) (unzip to find a .d file).<br>
+Example feature list can be found in [data/maldi_ms1_tims_autox_features.csv](https://github.com/gtluubruker/timstof_targeted_3d_maldi_analysis/blob/main/data/maldi_ms1_tims_autox_features.csv)
+
+#### Get Feature Intensities for a Single Feature
 ```
 get_feature_intensities --input [path to]/maldi_ms1_tims_autox/maldi_ms1_tims_autox.d --mz 622.0250 --mz_tol 0.05 --ook0 0.982 --ook0_tol 0.05
 ```
 
-#### Example Data
+Example output data can be found in [data/maldi_ms1_tims_autox_single.csv](https://github.com/gtluubruker/timstof_targeted_3d_maldi_analysis/blob/main/data/maldi_ms1_tims_autox_single.csv)
 
-Example input data can be found in [data/maldi_ms1_tims_autox.zip](https://github.com/gtluubruker/timstof_targeted_3d_maldi_analysis/blob/main/data/maldi_ms1_tims_autox.zip) (unzip to find a .d file).<br>
-Example output data can be found in [data/maldi_ms1_tims_autox.csv](https://github.com/gtluubruker/timstof_targeted_3d_maldi_analysis/blob/main/data/maldi_ms1_tims_autox.csv)
+#### Get Feature Intensities for Multiple Features
+```
+get_feature_intensities --input [path to]/maldi_ms1_tims_autox/maldi_ms1_tims_autox.d --mz 622.0250 922.0140 --mz_tol 0.05 --ook0 0.982 1.190 --ook0_tol 0.05
+```
+
+Alternatively, unique tolerances can be used for each feature.
+
+```
+get_feature_intensities --input [path to]/maldi_ms1_tims_autox/maldi_ms1_tims_autox.d --mz 622.0250 922.0140 --mz_tol 0.05 0.10 --ook0 0.982 1.190 --ook0_tol 0.05 0.10
+```
+
+Example output data can be found in [data/maldi_ms1_tims_autox_multiple.csv](https://github.com/gtluubruker/timstof_targeted_3d_maldi_analysis/blob/main/data/maldi_ms1_tims_autox_multiple.csv)
+
+#### Get Feature Intensities for Multiple Features Listed in a CSV File (Batch Processing)
+```
+get_batch_feature_intensities --input [path to]/maldi_ms1_tims_autox/maldi_ms1_tims_autox.d --feature_list [path to]/maldi_ms1_tims_autox_features.csv
+```
+
+Example output data can be found in [data/maldi_ms1_tims_autox_batch.csv](https://github.com/gtluubruker/timstof_targeted_3d_maldi_analysis/blob/main/data/maldi_ms1_tims_autox_batch.csv)
