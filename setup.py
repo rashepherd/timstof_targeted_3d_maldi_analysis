@@ -11,7 +11,7 @@ for package in install_requires:
         install_requires[install_requires.index(package)] = pname + ' @ ' + package
 setup(
     name='timstof_targeted_3d_maldi_analysis',
-    version='1.1.2',
+    version='1.2.0',
     url='https://github.com/gtluubruker/timstof_targeted_3d_maldi_analysis',
     license='Apache License',
     author='Gordon T. Luu',
