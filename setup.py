@@ -11,12 +11,13 @@ for package in install_requires:
         install_requires[install_requires.index(package)] = pname + ' @ ' + package
 setup(
     name='timstof_targeted_3d_maldi_analysis',
-    version='1.2.0',
+    version='1.3.0',
     url='https://github.com/gtluubruker/timstof_targeted_3d_maldi_analysis',
     license='Apache License',
     author='Gordon T. Luu',
     author_email='gordon.luu@bruker.com',
     packages=['bin'],
-    entry_points={'console_scripts': ['get_feature_intensities=bin.run:run']},
+    entry_points={'console_scripts': ['get_feature_intensities=bin.run:run',
+                                      'get_batch_feature_intensities=bin.run_batch:run']},
     install_requires=install_requires
 )

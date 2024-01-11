@@ -19,7 +19,7 @@ def get_args():
                         required=True,
                         type=str)
     parser.add_argument('--outdir',
-                        help='Path to folder in whch to write output CSV file. Default = same as input path.',
+                        help='Path to folder in which to write output CSV file. Default = same as input path.',
                         default='',
                         type=str)
     parser.add_argument('--outfile',
