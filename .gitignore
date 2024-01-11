@@ -6,7 +6,7 @@
 /venv
 /prototype
 /depracated
-/data
+/data/maldi_ms1_tims_autox
 /timsconvert.egg-info
 /dist
 /db
