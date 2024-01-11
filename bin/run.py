@@ -27,22 +27,22 @@ def get_args():
                         default='',
                         type=str)
     parser.add_argument('--mz',
-                        help='m/z value of interest',
+                        help='One or more m/z value(s) of interest. Must be equal to the num of 1/K0 values entered.',
                         required=True,
                         nargs='+',
                         type=float)
     parser.add_argument('--mz_tol',
-                        help='m/z tolerance in Da',
+                        help='One or more m/z tolerance(s) in Da.',
                         nargs='+',
                         default=0.05,
                         type=float)
     parser.add_argument('--ook0',
-                        help='1/K0 value of interest',
+                        help='One or more 1/K0 value(s) of interest. Must be equal to the num of m/z values entered.',
                         required=True,
                         nargs='+',
                         type=float)
     parser.add_argument('--ook0_tol',
-                        help='1/K0 tolerance',
+                        help='One or more 1/K0 tolerance(s).',
                         nargs='+',
                         default=0.05,
                         type=float)

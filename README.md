@@ -43,13 +43,20 @@ For help, use: `python run.py --help`. Parameters are also described below.
 
 #### Parameters
 
+`get_feature_intensities`: used for features entered from the command line<br>
 `--input`: File path for Bruker .d file from MALDI AutoXecute run containing TDF file.<br>
 `--outdir`: Path to folder in whch to write output CSV file. Default = same as input path.<br>
 `--outfile`: User defined filename for output CSV file. Will use the ".d" directory name if none is specified.<br>
-`--mz`: m/z value of interest<br>
-`--mz_tol`: m/z tolerance in Da. Default = 0.05 Da<br>
-`--ook0`: 1/K0 value of interest<br>
-`--ook0_tol`: 1/K0 tolerance. Default = 0.05<br>
+`--mz`: One or more m/z value(s) of interest. Must be equal to the num of 1/K0 values entered.<br>
+`--mz_tol`: One or more m/z tolerance(s) in Da. Default = 0.05 Da<br>
+`--ook0`: One or more 1/K0 value(s) of interest. Must be equal to the num of m/z values entered.<br>
+`--ook0_tol`: One or more 1/K0 tolerance(s). Default = 0.05<br>
+
+`get_batch_feature_intensities`: used for features from a CSV file<br>
+`--input`: File path for Bruker .d file from MALDI AutoXecute run containing TDF file.<br>
+`--outdir`: Path to folder in whch to write output CSV file. Default = same as input path.<br>
+`--outfile`: User defined filename for output CSV file. Will use the ".d" directory name if none is specified.<br>
+`--feature_list`: CSV file w/ columns for "mz", "mz_tol", "ook0", and "ook0_tol" to define features.<br>
 
 ### Examples
 
