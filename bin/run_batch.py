@@ -78,7 +78,7 @@ def run():
             ook0_array = tims_scannum_to_oneoverk0(dll, tdf_data.handle, frame, range(0, frames_dict['NumScans']+1))
             # Get 1/K0 values within tolerance
             ook0_within_tolerance = [i for i in ook0_array
-                                     if ook0 + ook0_tol >= i >= ook0_tol - ook0_tol]
+                                     if ook0 + ook0_tol >= i >= ook0 - ook0_tol]
             # Get scan numbers for ook0 values within tolerance
             ook0_within_tolerance_scannums = tims_oneoverk0_to_scannum(dll,
                                                                        tdf_data.handle,
