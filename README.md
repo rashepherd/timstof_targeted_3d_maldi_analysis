@@ -89,3 +89,8 @@ get_batch_feature_intensities --input [path to]/maldi_ms1_tims_autox/maldi_ms1_t
 ```
 
 Example output data can be found in [data/maldi_ms1_tims_autox_batch.csv](https://github.com/gtluubruker/timstof_targeted_3d_maldi_analysis/blob/main/data/maldi_ms1_tims_autox_batch.csv)
+
+#### Calculate and Visualize Ratios Between Features Listed in a CSV File (Batch Processing + Visualization)
+```
+get_feature_map --input [path to]/maldi_ms1_tims_autox/maldi_ms1_tims_autox.d --feature_list [path to]/maldi_ms1_tims_autox_features.csv
+```
