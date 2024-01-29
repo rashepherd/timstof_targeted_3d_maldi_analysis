@@ -18,6 +18,7 @@ setup(
     author_email='gordon.luu@bruker.com',
     packages=['bin'],
     entry_points={'console_scripts': ['get_feature_intensities=bin.run:run',
-                                      'get_batch_feature_intensities=bin.run_batch:run']},
+                                      'get_batch_feature_intensities=bin.run_batch:run',
+                                      'get_feature_map=bin.run_batch_map:run']},
     install_requires=install_requires
 )
