@@ -1,3 +1,5 @@
 numpy
 pandas
+matplotlib
+seaborn
 git+https://github.com/gtluu/pyTDFSDK
