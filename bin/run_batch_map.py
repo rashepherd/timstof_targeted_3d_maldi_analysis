@@ -141,10 +141,10 @@ def run():
     # Convert the data type of 'ratio' to float
     heatmap_data = heatmap_data.astype(float)
 
-    # Save the result to a new CSV file or use it as needed
+    # Save the result to a new CSV file
     heatmap_data.to_csv(os.path.join(args['outdir'], 'heatmap_data.csv'), index=False)
 
-    # Create a heatmap using seaborn
+    # Create a heatmap of the calculated ratios using seaborn
     plt.figure(figsize=(10, 8))
     sns.heatmap(heatmap_data, annot=True, cmap='viridis', fmt=".2f", cbar_kws={'label': 'Ratio'})
     plt.title('Heatmap of Mean Ratio Values')
