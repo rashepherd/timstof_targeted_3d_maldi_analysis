@@ -46,7 +46,7 @@ For help, use: `python run.py --help`. Parameters are also described below.
 `get_feature_intensities`: used for features entered from the command line<br>
 `--input`: File path for Bruker .d file from MALDI AutoXecute run containing TDF file.<br>
 `--outdir`: Path to folder in whch to write output CSV file. Default = same as input path.<br>
-`--outfile`: User defined filename for output CSV file. Will use the ".d" directory name if none is specified.<br>
+`--outfile`: User-defined filename for output CSV file. Will use the ".d" directory name if none is specified.<br>
 `--mz`: One or more m/z value(s) of interest. Must be equal to the num of 1/K0 values entered.<br>
 `--mz_tol`: One or more m/z tolerance(s) in Da. Default = 0.05 Da<br>
 `--ook0`: One or more 1/K0 value(s) of interest. Must be equal to the num of m/z values entered.<br>
@@ -55,13 +55,13 @@ For help, use: `python run.py --help`. Parameters are also described below.
 `get_batch_feature_intensities`: used for features from a CSV file<br>
 `--input`: File path for Bruker .d file from MALDI AutoXecute run containing TDF file.<br>
 `--outdir`: Path to folder in which to write output CSV file. Default = same as input path.<br>
-`--outfile`: User defined filename for output CSV file. Will use the ".d" directory name if none is specified.<br>
+`--outfile`: User-defined filename for output CSV file. Will use the ".d" directory name if none is specified.<br>
 `--feature_list`: CSV file w/ columns for "mz", "mz_tol", "ook0", and "ook0_tol" to define features.<br>
 
 `get_feature_map`: used for features from a CSV file<br>
 `--input`: File path for Bruker .d file from MALDI AutoXecute run containing TDF file.<br>
 `--outdir`: Path to folder in whch to write output CSV file. Default = same as input path.<br>
-`--outfile`: User defined filename for output CSV file. Will use the ".d" directory name if none is specified.<br>
+`--outfile`: User-defined filename for output CSV file. Will use the ".d" directory name if none is specified.<br>
 `--feature_list`: CSV file w/ columns for "mz", "mz_tol", "ook0", and "ook0_tol" to define features.<br>
 `--numerator_ook0`: User-defined 1/K0 value for the desired feature to be used as the numerator in intensity ratio calculation.<br>
 `--denominator_ook0`: User-defined 1/K0 value for the desired feature to be used as the denominator in intensity ratio calculation.<br>
