@@ -128,7 +128,7 @@ def run():
     results[['index', 'integer']] = results['Spot'].str.extract('([A-Za-z]+)(\d+)', expand=True)
 
     # Group by 'Frame', 'Spot', 'index' and 'integer', and calculate sum of intensities for numerator and denominator
-    group_columns = ['Frame', 'Spot', 'index', 'integer']
+    group_columns = ['Frame', 'index', 'integer']
     results['numerator_intensity'] = results[results['ook0'] == args['numerator_ook0']].groupby(group_columns)['intensity'].transform('sum')
     results['denominator_intensity'] = results[results['ook0'] == args['denominator_ook0']].groupby(group_columns)['intensity'].transform('sum')
 
