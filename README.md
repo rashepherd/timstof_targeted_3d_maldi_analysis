@@ -54,9 +54,17 @@ For help, use: `python run.py --help`. Parameters are also described below.
 
 `get_batch_feature_intensities`: used for features from a CSV file<br>
 `--input`: File path for Bruker .d file from MALDI AutoXecute run containing TDF file.<br>
+`--outdir`: Path to folder in which to write output CSV file. Default = same as input path.<br>
+`--outfile`: User defined filename for output CSV file. Will use the ".d" directory name if none is specified.<br>
+`--feature_list`: CSV file w/ columns for "mz", "mz_tol", "ook0", and "ook0_tol" to define features.<br>
+
+`get_feature_map`: used for features from a CSV file<br>
+`--input`: File path for Bruker .d file from MALDI AutoXecute run containing TDF file.<br>
 `--outdir`: Path to folder in whch to write output CSV file. Default = same as input path.<br>
 `--outfile`: User defined filename for output CSV file. Will use the ".d" directory name if none is specified.<br>
 `--feature_list`: CSV file w/ columns for "mz", "mz_tol", "ook0", and "ook0_tol" to define features.<br>
+`--numerator_ook0`: User-defined 1/K0 value for the desired feature to be used as the numerator in ratio calculation.<br>
+`--denominator_ook0`: User-defined 1/K0 value for the desired feature to be used as the denominator in ratio calculation.<br>
 
 ### Examples
 
@@ -92,5 +100,5 @@ Example output data can be found in [data/maldi_ms1_tims_autox_batch.csv](https:
 
 #### Calculate and Visualize Ratios Between Features Listed in a CSV File (Batch Processing + Visualization)
 ```
-get_feature_map --input [path to]/maldi_ms1_tims_autox/maldi_ms1_tims_autox.d --feature_list [path to]/maldi_ms1_tims_autox_features.csv
+get_feature_map --input [path to]/maldi_ms1_tims_autox/maldi_ms1_tims_autox.d --feature_list [path to]/maldi_ms1_tims_autox_features.csv --numerator_ook0 0.683 --denominator_ook0 0.703
 ```
