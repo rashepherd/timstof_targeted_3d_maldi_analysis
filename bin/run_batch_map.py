@@ -127,8 +127,8 @@ def run():
     # Split the 'Spot' column into two new columns 'index' and 'integer'
     results[['index', 'integer']] = results['Spot'].str.extract('([A-Za-z]+)(\d+)', expand=True)
 
-    # Group by 'Frame' and the new columns 'index' and 'integer'
-    group_columns = ['Frame', 'index', 'integer']
+    # Group by 'Frame', 'Spot' and the new columns 'index' and 'integer'
+    group_columns = ['Frame', 'Spot', 'index', 'integer']
 
     # Calculate the ratio for each group based on user-defined numerator and denominator ook0 values
     results['numerator_intensity'] = results[results['ook0'] == args['numerator_ook0']].groupby(group_columns)['intensity'].transform('sum')
@@ -138,10 +138,10 @@ def run():
     results['ratio'] = results['numerator_intensity'] / results['denominator_intensity']
 
     # Drop duplicate rows based on the combination of 'index' and 'integer'
-    df = results.drop_duplicates(subset=['index', 'integer'])
+    #df = results.drop_duplicates(subset=['index', 'integer'])
 
     # Save the result to a new CSV file
-    df.to_csv(os.path.join(args['outdir'], 'modified_outfile.csv'), index=False)
+    results.to_csv(os.path.join(args['outdir'], 'modified_outfile.csv'), index=False)
 
     # Display the resulting DataFrame with the modified columns
     print(df)
