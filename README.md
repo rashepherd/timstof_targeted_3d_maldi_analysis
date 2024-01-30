@@ -63,8 +63,8 @@ For help, use: `python run.py --help`. Parameters are also described below.
 `--outdir`: Path to folder in whch to write output CSV file. Default = same as input path.<br>
 `--outfile`: User defined filename for output CSV file. Will use the ".d" directory name if none is specified.<br>
 `--feature_list`: CSV file w/ columns for "mz", "mz_tol", "ook0", and "ook0_tol" to define features.<br>
-`--numerator_ook0`: User-defined 1/K0 value for the desired feature to be used as the numerator in ratio calculation.<br>
-`--denominator_ook0`: User-defined 1/K0 value for the desired feature to be used as the denominator in ratio calculation.<br>
+`--numerator_ook0`: User-defined 1/K0 value for the desired feature to be used as the numerator in intensity ratio calculation.<br>
+`--denominator_ook0`: User-defined 1/K0 value for the desired feature to be used as the denominator in intensity ratio calculation.<br>
 
 ### Examples
 
