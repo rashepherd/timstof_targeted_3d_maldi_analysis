@@ -133,7 +133,7 @@ def run():
     results['denominator_intensity'] = results[results['ook0'] == args['denominator_ook0']].groupby(group_columns, as_index=False)['intensity'].transform('sum')
 
     # Group by 'Frame', 'Spot', 'index' and 'integer'
-    grouped_results = results.groupby(group_columns, as_index=False)['numerator_intensity', 'denominator_intensity'].sum()
+    grouped_results = results.groupby(group_columns, as_index=False)[['numerator_intensity', 'denominator_intensity']].sum()
 
     # Calculate the ratio based on 'numerator_intensity' and 'denominator_intensity'
     grouped_results['ratio'] = grouped_results['numerator_intensity'] / grouped_results['denominator_intensity']
