@@ -31,6 +31,14 @@ def get_args():
                         help='CSV file w/ columns for "mz", "mz_tol", "ook0", and "ook0_tol" to define features.',
                         required=True,
                         type=str)
+    parser.add_argument('--numerator_ook0',
+                        help='User defined ook0 value to be used as the numerator in ratio calculation.',
+                        required=True,
+                        type=float)
+    parser.add_argument('--denominator_ook0',
+                        help='User defined ook0 value to be used as the denominator in ratio calculation.',
+                        required=True,
+                        type=float)
     arguments = parser.parse_args()
     return vars(arguments)
 
@@ -120,11 +128,14 @@ def run():
     results[['index', 'integer']] = results['Spot'].str.extract('([A-Za-z]+)(\d+)', expand=True)
 
     # Group by 'Frame' and the new columns 'index' and 'integer'
-    # Calculate the ratio for each group
-    results['ratio'] = results.groupby(['Frame', 'index', 'integer'])['intensity'].transform(lambda x: x / x.max())
+    group_columns = ['Frame', 'index', 'integer']
 
-    # Replace the ratio with '-' when it's very close to 1
-    #results['ratio'] = results['ratio'].apply(lambda x: '-' if np.isclose(x, 1) else x)
+    # Calculate the ratio for each group based on user-defined numerator and denominator ook0 values
+    results['numerator_intensity'] = results[results['ook0'] == args['numerator_ook0']].groupby(group_columns)['intensity'].transform('sum')
+    results['denominator_intensity'] = results[results['ook0'] == args['denominator_ook0']].groupby(group_columns)['intensity'].transform('sum')
+
+    # Calculate the ratio using the specified numerator and denominator
+    results['ratio'] = results['numerator_intensity'] / results['denominator_intensity']
 
     # Drop duplicate rows based on the combination of 'index' and 'integer'
     df = results.drop_duplicates(subset=['index', 'integer'])
