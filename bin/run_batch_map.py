@@ -124,7 +124,7 @@ def run():
     results['ratio'] = results.groupby(['Frame', 'index', 'integer'])['intensity'].transform(lambda x: x / x.max())
 
     # Replace the ratio with '-' when it's very close to 1
-    results['ratio'] = results['ratio'].apply(lambda x: '-' if np.isclose(x, 1) else x)
+    #results['ratio'] = results['ratio'].apply(lambda x: '-' if np.isclose(x, 1) else x)
 
     # Drop duplicate rows based on the combination of 'index' and 'integer'
     df = results.drop_duplicates(subset=['index', 'integer'])
