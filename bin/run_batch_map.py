@@ -127,26 +127,24 @@ def run():
     # Split the 'Spot' column into two new columns 'index' and 'integer'
     results[['index', 'integer']] = results['Spot'].str.extract('([A-Za-z]+)(\d+)', expand=True)
 
-    # Group by 'Frame', 'Spot' and the new columns 'index' and 'integer'
+    # Group by 'Frame', 'Spot', 'index' and 'integer', and calculate sum of intensities for numerator and denominator
     group_columns = ['Frame', 'Spot', 'index', 'integer']
-
-    # Calculate the ratio for each group based on user-defined numerator and denominator ook0 values
     results['numerator_intensity'] = results[results['ook0'] == args['numerator_ook0']].groupby(group_columns)['intensity'].transform('sum')
     results['denominator_intensity'] = results[results['ook0'] == args['denominator_ook0']].groupby(group_columns)['intensity'].transform('sum')
 
-    # Calculate the ratio using the specified numerator and denominator
-    results['ratio'] = results['numerator_intensity'] / results['denominator_intensity']
+    # Group by 'Frame', 'Spot', 'index' and 'integer'
+    grouped_results = results.groupby(group_columns)['numerator_intensity', 'denominator_intensity'].sum().reset_index()
 
-    # Drop duplicate rows based on the combination of 'index' and 'integer'
-    #df = results.drop_duplicates(subset=['index', 'integer'])
+    # Calculate the ratio based on 'numerator_intensity' and 'denominator_intensity'
+    grouped_results['ratio'] = grouped_results['numerator_intensity'] / grouped_results['denominator_intensity']
 
     # Save the result to a new CSV file
-    results.to_csv(os.path.join(args['outdir'], 'modified_outfile.csv'), index=False)
+    grouped_results.to_csv(os.path.join(args['outdir'], 'modified_outfile.csv'), index=False)
 
     # Display the resulting DataFrame with the modified columns
-    print(results)
+    print(grouped_results)
     
-    df = results
+    df = grouped_results
 
     # Group by 'index' and 'integer', then aggregate using the mean of 'ratio'
     heatmap_data = df[df['ratio'] != '-'].groupby(['index', 'integer'])['ratio'].mean().unstack()
