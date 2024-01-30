@@ -128,12 +128,12 @@ def run():
     results[['index', 'integer']] = results['Spot'].str.extract('([A-Za-z]+)(\d+)', expand=True)
 
     # Group by 'Frame', 'Spot', 'index' and 'integer', and calculate sum of intensities for numerator and denominator
-    group_columns = ['Frame', 'index', 'integer']
+    group_columns = ['Frame', 'Spot', 'index', 'integer']
     results['numerator_intensity'] = results[results['ook0'] == args['numerator_ook0']].groupby(group_columns)['intensity'].transform('sum')
     results['denominator_intensity'] = results[results['ook0'] == args['denominator_ook0']].groupby(group_columns)['intensity'].transform('sum')
 
     # Group by 'Frame', 'Spot', 'index' and 'integer'
-    grouped_results = results.groupby(group_columns)['numerator_intensity', 'denominator_intensity'].sum().reset_index()
+    grouped_results = results.groupby(group_columns, as_index=False)['numerator_intensity', 'denominator_intensity'].sum()
 
     # Calculate the ratio based on 'numerator_intensity' and 'denominator_intensity'
     grouped_results['ratio'] = grouped_results['numerator_intensity'] / grouped_results['denominator_intensity']
