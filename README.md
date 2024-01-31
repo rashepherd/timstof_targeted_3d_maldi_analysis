@@ -31,7 +31,7 @@ conda activate timstof_targeted_3d_maldi_analysis
 
 5. Install this package:
 ```
-pip install git+https://github.com/gtluubruker/timstof_targeted_3d_maldi_analysis
+pip install git+https://github.com/rashepherd/timstof_targeted_3d_maldi_analysis
 ```
 
 ## Usage
