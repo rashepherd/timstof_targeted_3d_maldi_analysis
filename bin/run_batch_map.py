@@ -143,12 +143,9 @@ def run():
 
     # Display the resulting DataFrame with the modified columns
     print(grouped_results)
-    
-    #define 'grouped_results' as 'df' because typing 'grouped_results' a bunch of times is annoying and looks ugly
-    df = grouped_results
 
     # Group by 'index' and 'integer', then aggregate using the mean of 'ratio'
-    heatmap_data = df[df['ratio'] != '-'].groupby(['index', 'integer'])['ratio'].mean().unstack()
+    heatmap_data = grouped_results[grouped_results['ratio'] != '-'].groupby(['index', 'integer'])['ratio'].mean().unstack()
 
     # Convert the data type of 'ratio' to float
     heatmap_data = heatmap_data.astype(float)
