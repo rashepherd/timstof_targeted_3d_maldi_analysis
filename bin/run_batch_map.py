@@ -1,8 +1,3 @@
-# functions for initializing TDF-SDK are found in the pyTDFSDK package
-from pyTDFSDK.init_tdf_sdk import init_tdf_sdk_api
-from pyTDFSDK.classes import TdfData
-from pyTDFSDK.tims import tims_scannum_to_oneoverk0, tims_oneoverk0_to_scannum, tims_index_to_mz, tims_read_scans_v2
-
 import os
 import platform
 import sqlite3
@@ -11,6 +6,11 @@ import pandas as pd
 import argparse
 import seaborn as sns
 import matplotlib.pyplot as plt
+
+# functions for initializing TDF-SDK are found in the pyTDFSDK package
+from pyTDFSDK.init_tdf_sdk import init_tdf_sdk_api
+from pyTDFSDK.classes import TdfData
+from pyTDFSDK.tims import tims_scannum_to_oneoverk0, tims_oneoverk0_to_scannum, tims_index_to_mz, tims_read_scans_v2
 
 # arguments to run in the command line
 def get_args():
@@ -38,6 +38,12 @@ def get_args():
     parser.add_argument('--denominator_ook0',
                         help='User defined ook0 value to be used as the denominator in ratio calculation.',
                         required=True,
+                        type=float)
+    parser.add_argument('--IS_mz',
+                        help='User defined m/z value for intensity sum calculation.',
+                        type=float)
+    parser.add_argument('--IS_tol',
+                        help='User defined tolerance for m/z value for intensity sum calculation.',
                         type=float)
     arguments = parser.parse_args()
     return vars(arguments)
@@ -83,6 +89,11 @@ def run():
             scan_dict['ook0_tol'] = ook0_tol
             scan_dict['intensity'] = 0
 
+            if args['IS_mz'] is not None and args['IS_tol'] is not None:
+                scan_dict['IS_mz'] = args['IS_mz']
+                scan_dict['IS_tol'] = args['IS_tol']
+                scan_dict['IS_intensity'] = 0
+
             # Get 1/K0 values from scan numbers in run
             ook0_array = tims_scannum_to_oneoverk0(dll, tdf_data.handle, frame, range(0, frames_dict['NumScans']+1))
             # Get 1/K0 values within tolerance
@@ -94,17 +105,24 @@ def run():
                                                                        frame,
                                                                        ook0_within_tolerance)
             ook0_within_tolerance_scannums = [int(i) for i in ook0_within_tolerance_scannums]
+            #If IS_mz and IS_tol are  both defined, the summed intensity of this feature for the entire spot is calculated.
+            if args['IS_mz'] is not None and args['IS_tol'] is not None:
+                # Read all scans from current frame and spot
+                list_of_scans = tims_read_scans_v2(dll,
+                                                   tdf_data.handle,
+                                                   frame,
+                                                   0,
+                                                   frames_dict['NumScans']+1)
+			#If IS_mz and IS_tol are not defined, scans are limited to the 									   
+            else:
+                # Read scans within the ook0 tolerance range
+                list_of_scans = tims_read_scans_v2(dll,
+                                                   tdf_data.handle,
+                                                   frame,
+                                                   min(ook0_within_tolerance_scannums),
+                                                   max(ook0_within_tolerance_scannums))
 
-            # Read scans from current frame
-            # each frame has N scans where each scan corresponds to a 1/K0 value
-            list_of_scans = tims_read_scans_v2(dll,
-                                               tdf_data.handle,
-                                               frame,
-                                               min(ook0_within_tolerance_scannums),
-                                               max(ook0_within_tolerance_scannums))
-            scan_begin = 0
-            scan_end = max(ook0_within_tolerance_scannums) - min(ook0_within_tolerance_scannums)
-            for scan_num in range(scan_begin, scan_end):
+            for scan_num in range(len(list_of_scans)):
                 if list_of_scans[scan_num][0].size != 0 \
                         and list_of_scans[scan_num][1].size != 0 \
                         and list_of_scans[scan_num][0].size == list_of_scans[scan_num][1].size:
@@ -116,6 +134,13 @@ def run():
                     # Sum intensities if m/z value was found within tolerance of feature of interest
                     # this summed intensity is the intensity of mz +/- mz_tol at ook0 +/- ook0_tol
                     scan_dict['intensity'] += sum([intensity_array[i] for i in indices])
+
+                    # If IS_mz and IS_tol are specified, extract summed intensity for given IS_mz within IS_tol
+                    if args['IS_mz'] is not None and args['IS_tol'] is not None:
+                        is_indices = [mz_array.index(i) for i in mz_array
+                                      if args['IS_mz'] + args['IS_tol'] >= i >= args['IS_mz'] - args['IS_tol']]
+                        scan_dict['IS_intensity'] += sum([intensity_array[i] for i in is_indices])
+
             list_of_scan_dicts.append(scan_dict)
 
     results = pd.DataFrame(list_of_scan_dicts)
@@ -123,20 +148,34 @@ def run():
 
     # Display the resulting DataFrame with the modified columns
     print(results)
-    
+
     # Split the 'Spot' column into two new columns 'index' and 'integer'
     results[['index', 'integer']] = results['Spot'].str.extract('([A-Za-z]+)(\d+)', expand=True)
 
+    # If IS_mz and IS_tol are specified, divide intensities by IS_intensity
+    if args['IS_mz'] is not None and args['IS_tol'] is not None:
+        results['n_intensity'] = results['intensity'] / results['IS_intensity']
+
     # Group by 'Frame', 'Spot', 'index' and 'integer', and calculate sum of intensities for numerator and denominator
     group_columns = ['Frame', 'Spot', 'index', 'integer']
-    results['numerator_intensity'] = results[results['ook0'] == args['numerator_ook0']].groupby(group_columns, as_index=False)['intensity'].transform('sum')
-    results['denominator_intensity'] = results[results['ook0'] == args['denominator_ook0']].groupby(group_columns, as_index=False)['intensity'].transform('sum')
+    if args['IS_mz'] is not None and args['IS_tol'] is not None:
+        numerator_intensity_col = 'numerator_intensity' if args['IS_mz'] is None else 'n_numerator_intensity'
+        denominator_intensity_col = 'denominator_intensity' if args['IS_mz'] is None else 'n_denominator_intensity'
+        results[numerator_intensity_col] = results[results['ook0'] == args['numerator_ook0']].groupby(group_columns, as_index=False)['n_intensity'].transform('sum')
+        results[denominator_intensity_col] = results[results['ook0'] == args['denominator_ook0']].groupby(group_columns, as_index=False)['n_intensity'].transform('sum')
+    else:
+        results['numerator_intensity'] = results[results['ook0'] == args['numerator_ook0']].groupby(group_columns, as_index=False)['intensity'].transform('sum')
+        results['denominator_intensity'] = results[results['ook0'] == args['denominator_ook0']].groupby(group_columns, as_index=False)['intensity'].transform('sum')
 
     # Group by 'Frame', 'Spot', 'index' and 'integer'
     grouped_results = results.groupby(group_columns, as_index=False)[['numerator_intensity', 'denominator_intensity']].sum()
 
-    # Calculate the ratio based on 'numerator_intensity' and 'denominator_intensity'
-    grouped_results['ratio'] = grouped_results['numerator_intensity'] / grouped_results['denominator_intensity']
+    # If IS_mz and IS_tol are specified, calculate the ratio based on 'numerator_intensity' and 'denominator_intensity' with IS
+    if args['IS_mz'] is not None and args['IS_tol'] is not None:
+        grouped_results['ratio_with_IS'] = grouped_results['n_numerator_intensity'] / grouped_results['n_denominator_intensity']
+    else:
+        # Calculate the ratio based on 'numerator_intensity' and 'denominator_intensity'
+        grouped_results['ratio'] = grouped_results['numerator_intensity'] / grouped_results['denominator_intensity']
 
     # Save the result to a new CSV file
     grouped_results.to_csv(os.path.join(args['outdir'], 'modified_outfile.csv'), index=False)
@@ -163,3 +202,5 @@ def run():
 
 if __name__ == "__main__":
     run()
+
+
