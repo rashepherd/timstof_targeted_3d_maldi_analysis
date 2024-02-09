@@ -141,7 +141,8 @@ def run():
         results['IS_intensity'] = results[results['mz'] == args['IS_mz']].groupby(
             group_columns, as_index=False)['intensity'].transform('sum')
 
-        # If feature for internal standard is defined, normalize the 'numerator_intensity' and 'denominator_intensity'
+    # If feature for internal standard is defined, normalize the 'numerator_intensity' and 'denominator_intensity'
+    if args['IS_mz'] is not None:
         results['n_numerator_intensity'] = results['numerator_intensity'] / results['IS_intensity']
         results['n_denominator_intensity'] = results['denominator_intensity'] / results['IS_intensity']
     else:
