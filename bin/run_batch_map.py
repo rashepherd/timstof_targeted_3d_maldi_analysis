@@ -39,9 +39,9 @@ def get_args():
                         help='User defined ook0 value to be used as the denominator in ratio calculation.',
                         required=True,
                         type=float)
-	parser.add_argument('--IS_mz',
-	                    help='User defined m/z value for the feature to be used as the internal standard for intensity normalization.',
-						type=float)
+    parser.add_argument('--IS_mz',
+	                help='User defined m/z value for the feature to be used as the internal standard for intensity normalization.',
+			type=float)
     arguments = parser.parse_args()
     return vars(arguments)
 
