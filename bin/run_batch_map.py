@@ -150,7 +150,7 @@ def run():
         results['n_denominator_intensity'] = results['denominator_intensity']
 
     # Group by 'Frame', 'Spot', 'index' and 'integer', and calculate sum of intensities for numerator and denominator
-    if args['IZ_mz'] is not none:
+    if args['IZ_mz'] is not None:
         grouped_results = results.groupby(group_columns, as_index=False)[['n_numerator_intensity', 'n_denominator_intensity']].sum()
     else:
         grouped_results = results.groupby(group_columns, as_index=False)[['numerator_intensity', 'denominator_intensity']].sum()
