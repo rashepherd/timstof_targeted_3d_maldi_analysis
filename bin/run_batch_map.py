@@ -40,8 +40,8 @@ def get_args():
                         required=True,
                         type=float)
     parser.add_argument('--IS_mz',
-	                help='User defined m/z value for the feature to be used as the internal standard for intensity normalization.',
-			type=float)
+                        help='User defined m/z value for the feature to be used as the internal standard for intensity normalization.',
+                        type=float)
     arguments = parser.parse_args()
     return vars(arguments)
 
@@ -70,7 +70,7 @@ def run():
         mz_tol = row['mz_tol']
         ook0 = row['ook0']
         ook0_tol = row['ook0_tol']
-		
+
         # Each frame == one spectrum from a MALDI spot
         # MaldiFrameInfo table in analysis.tdf SQL database tells which frame is associated with each spot
         for frame in range(1, tdf_data.analysis['MaldiFrameInfo'].shape[0] + 1):
@@ -141,15 +141,14 @@ def run():
         results['IS_intensity'] = results[results['mz'] == args['IS_mz']].groupby(
             group_columns, as_index=False)['intensity'].transform('sum')
 
-    # If feature for internal standard is defined, normalize the 'numerator_intensity' and 'denominator_intensity'
-	if args['IS_Mz'] is not none:
-	    results['n_numerator_intensity'] = results['numerator_intensity'] / results['IS_intensity']
+        # If feature for internal standard is defined, normalize the 'numerator_intensity' and 'denominator_intensity'
+        results['n_numerator_intensity'] = results['numerator_intensity'] / results['IS_intensity']
         results['n_denominator_intensity'] = results['denominator_intensity'] / results['IS_intensity']
-	    
-		#rename the columns if normalization is performed
-		results.rename(columns={'numerator_intensity': 'n_numerator_intensity', 'denominator_intensity': 'n_denominator_intensity'}, inplace=True)
-	else:
-	    results['n_numerator_intensity'] = results['numerator_intensity']
+        
+        #rename the columns if normalization is performed
+        results.rename(columns={'numerator_intensity': 'n_numerator_intensity', 'denominator_intensity': 'n_denominator_intensity'}, inplace=True)
+    else:
+        results['n_numerator_intensity'] = results['numerator_intensity']
         results['n_denominator_intensity'] = results['denominator_intensity']
 
     # Group by 'Frame', 'Spot', 'index' and 'integer', and calculate sum of intensities for numerator and denominator
