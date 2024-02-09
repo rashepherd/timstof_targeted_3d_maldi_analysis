@@ -155,14 +155,14 @@ def run():
     group_columns = ['Frame', 'Spot', 'index', 'integer']
     grouped_results = results.groupby(group_columns, as_index=False)[['n_numerator_intensity', 'n_denominator_intensity']].sum()
 
-    # Calculate the ratio based on 'n_numerator_intensity' and 'n_denominator_intensity'
-    grouped_results['ratio'] = grouped_results['n_numerator_intensity'] / grouped_results['n_denominator_intensity']
-
     # Save the result to a new CSV file
     grouped_results.to_csv(os.path.join(args['outdir'], 'modified_outfile.csv'), index=False)
 
     # Display the resulting DataFrame with the modified columns
     print(grouped_results)
+
+    # Calculate the ratio based on 'n_numerator_intensity' and 'n_denominator_intensity'
+    grouped_results['ratio'] = grouped_results['n_numerator_intensity'] / grouped_results['n_denominator_intensity']
 
     # Group by 'index' and 'integer', then aggregate using the mean of 'ratio'
     heatmap_data = grouped_results[grouped_results['ratio'] != '-'].groupby(['index', 'integer'])['ratio'].mean().unstack()
@@ -183,5 +183,4 @@ def run():
 
 if __name__ == "__main__":
     run()
-
 
