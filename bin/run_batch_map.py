@@ -155,7 +155,7 @@ def run():
     group_columns = ['Frame', 'Spot', 'index', 'integer']
     grouped_results = results.groupby(group_columns, as_index=False)[['n_numerator_intensity', 'n_denominator_intensity']].sum()
 
-    # Calculate the ratio based on 'numerator_intensity' and 'denominator_intensity'
+    # Calculate the ratio based on 'n_numerator_intensity' and 'n_denominator_intensity'
     grouped_results['ratio'] = grouped_results['n_numerator_intensity'] / grouped_results['n_denominator_intensity']
 
     # Save the result to a new CSV file
@@ -183,4 +183,5 @@ def run():
 
 if __name__ == "__main__":
     run()
+
 
