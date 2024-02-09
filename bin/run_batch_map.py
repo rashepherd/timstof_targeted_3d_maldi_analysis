@@ -144,9 +144,6 @@ def run():
         # If feature for internal standard is defined, normalize the 'numerator_intensity' and 'denominator_intensity'
         results['n_numerator_intensity'] = results['numerator_intensity'] / results['IS_intensity']
         results['n_denominator_intensity'] = results['denominator_intensity'] / results['IS_intensity']
-        
-        #rename the columns if normalization is performed
-        results.rename(columns={'numerator_intensity': 'n_numerator_intensity', 'denominator_intensity': 'n_denominator_intensity'}, inplace=True)
     else:
         results['n_numerator_intensity'] = results['numerator_intensity']
         results['n_denominator_intensity'] = results['denominator_intensity']
