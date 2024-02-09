@@ -145,9 +145,6 @@ def run():
     if args['IS_mz'] is not None:
         results['n_numerator_intensity'] = results['numerator_intensity'] / results['IS_intensity']
         results['n_denominator_intensity'] = results['denominator_intensity'] / results['IS_intensity']
-    else:
-        results['n_numerator_intensity'] = results['numerator_intensity']
-        results['n_denominator_intensity'] = results['denominator_intensity']
 
     # Group by 'Frame', 'Spot', 'index' and 'integer', and calculate sum of intensities for numerator and denominator
     if args['IS_mz'] is not None:
