@@ -140,16 +140,11 @@ def run():
     if args['IS_mz'] is not None:
         results['IS_intensity'] = results[results['mz'] == args['IS_mz']].groupby(
             group_columns, as_index=False)['intensity'].transform('sum')
-    else:
-        pass
-    print(results)
     
     # If feature for internal standard is defined, normalize the 'numerator_intensity' and 'denominator_intensity'
     if args['IS_mz'] is not None:
         results['n_numerator_intensity'] = results['numerator_intensity'] / results['IS_intensity']
         results['n_denominator_intensity'] = results['denominator_intensity'] / results['IS_intensity']
-    else:
-        pass
 
     # Group by 'Frame', 'Spot', 'index' and 'integer', and calculate sum of intensities for numerator and denominator, and internal standard if provided.
     if args['IS_mz'] is not None:
@@ -157,13 +152,6 @@ def run():
     else:
         grouped_results = results.groupby(group_columns, as_index=False)[['numerator_intensity', 'denominator_intensity']].sum()
 
-    # If feature for internal standard is defined, normalize the 'numerator_intensity' and 'denominator_intensity'
-    if args['IS_mz'] is not None:
-        results['n_numerator_intensity'] = results['numerator_intensity'] / results['IS_intensity']
-        results['n_denominator_intensity'] = results['denominator_intensity'] / results['IS_intensity']
-    else:
-        pass
-		
     # Conditionally define the ratio column based on internal standard normalization
     if args['IS_mz'] is not None:
         grouped_results['ratio'] = grouped_results['n_numerator_intensity'] / grouped_results['n_denominator_intensity']
@@ -195,4 +183,5 @@ def run():
 
 if __name__ == "__main__":
     run()
+
 
