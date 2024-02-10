@@ -152,11 +152,11 @@ def run():
         pass
 
     # Group by 'Frame', 'Spot', 'index' and 'integer', and calculate sum of intensities for numerator and denominator, and internal standard if provided.
-	if args['IS_mz'] is not None:
-	    grouped_results = results.groupby(group_columns, as_index=False)[['numerator_intensity', 'denominator_intensity', 'IS_intensity']].sum()
-	else:
+    if args['IS_mz'] is not None:
+        grouped_results = results.groupby(group_columns, as_index=False)[['numerator_intensity', 'denominator_intensity', 'IS_intensity']].sum()
+    else:
         grouped_results = results.groupby(group_columns, as_index=False)[['numerator_intensity', 'denominator_intensity']].sum()
-	
+
     # If feature for internal standard is defined, normalize the 'numerator_intensity' and 'denominator_intensity'
     if args['IS_mz'] is not None:
         results['n_numerator_intensity'] = results['numerator_intensity'] / results['IS_intensity']
@@ -195,3 +195,4 @@ def run():
 
 if __name__ == "__main__":
     run()
+
