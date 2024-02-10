@@ -112,43 +112,79 @@ def run():
                 if list_of_scans[scan_num][0].size != 0 \
                         and list_of_scans[scan_num][1].size != 0 \
                         and list_of_scans[scan_num][0].size == list_of_scans[scan_num][1].size:
-                    mz_array = tims_index_to_mz(dll, tdf_data.handle, frame, list_of_scans[scan_num][0])
-                    intensity_array = list_of_scans[scan_num][1]
-
-                    for mz_value, intensity in zip(mz_array, intensity_array):
-                        if mz + mz_tol >= mz_value >= mz - mz_tol:
-                            scan_dict['intensity'] += intensity
-
+                    mz_array = tims_index_to_mz(dll, tdf_data.handle, frame, list_of_scans[scan_num][0]).tolist()
+                    intensity_array = list_of_scans[scan_num][1].tolist()
+                    # Get indices of m/z values within tolerance
+                    indices = [mz_array.index(i) for i in mz_array
+                               if mz + mz_tol >= i >= mz - mz_tol]
+                    # Sum intensities if m/z value was found within tolerance of feature of interest
+                    # this summed intensity is the intensity of mz +/- mz_tol at ook0 +/- ook0_tol
+                    scan_dict['intensity'] += sum([intensity_array[i] for i in indices])
             list_of_scan_dicts.append(scan_dict)
 
-    intensity_df = pd.DataFrame(list_of_scan_dicts)
+    results = pd.DataFrame(list_of_scan_dicts)
+    results.to_csv(os.path.join(args['outdir'], args['outfile']), index=False)
 
-    if args['IS_mz']:
-        IS_intensity = intensity_df.loc[intensity_df['mz'] == args['IS_mz'], 'intensity'].mean()
-        intensity_df['normalized_intensity'] = intensity_df['intensity'] / IS_intensity
+    # Display the resulting DataFrame with the modified columns
+    print(results)
+    
+    # Split the 'Spot' column into two new columns 'index' and 'integer'
+    results[['index', 'integer']] = results['Spot'].str.extract('([A-Za-z]+)(\d+)', expand=True)
+
+    # Group by 'Frame', 'Spot', 'index' and 'integer', and calculate sum of intensities for numerator, denominator, and internal standard if provided 
+    group_columns = ['Frame', 'Spot', 'index', 'integer']
+    results['numerator_intensity'] = results[results['ook0'] == args['numerator_ook0']].groupby(
+        group_columns, as_index=False)['intensity'].transform('sum')
+    results['denominator_intensity'] = results[results['ook0'] == args['denominator_ook0']].groupby(
+        group_columns, as_index=False)['intensity'].transform('sum')
+    if args['IS_mz'] is not None:
+        results['IS_intensity'] = results[results['mz'] == args['IS_mz']].groupby(
+            group_columns, as_index=False)['intensity'].transform('sum')
+    
+    # If feature for internal standard is defined, normalize the 'numerator_intensity' and 'denominator_intensity'
+    if args['IS_mz'] is not None:
+        results['n_numerator_intensity'] = np.log1p(results['numerator_intensity'] / results['IS_intensity'])
+        results['n_denominator_intensity'] = np.log1p(results['denominator_intensity'] / results['IS_intensity'])
     else:
-        intensity_df['normalized_intensity'] = intensity_df['intensity']
+        results['n_numerator_intensity'] = np.log1p(results['numerator_intensity'])
+        results['n_denominator_intensity'] = np.log1p(results['denominator_intensity'])
 
-    # Apply logarithmic transformation to normalized intensity values
-    intensity_df['log_normalized_intensity'] = np.log1p(intensity_df['normalized_intensity'])
+    # Group by 'Frame', 'Spot', 'index' and 'integer', and calculate sum of intensities for numerator and denominator, and internal standard if provided.
+    if args['IS_mz'] is not None:
+        grouped_results = results.groupby(group_columns, as_index=False)[['n_numerator_intensity', 'n_denominator_intensity', 'IS_intensity']].sum()
+    else:
+        grouped_results = results.groupby(group_columns, as_index=False)[['n_numerator_intensity', 'n_denominator_intensity']].sum()
 
-    # Calculate ratio using the provided numerator and denominator ook0 values
-    intensity_df['ratio'] = intensity_df['ook0'].apply(lambda x: args['numerator_ook0'] / x) \
-                            * intensity_df['normalized_intensity']
+    # Conditionally define the ratio column based on internal standard normalization
+    if args['IS_mz'] is not None:
+        grouped_results['ratio'] = grouped_results['n_numerator_intensity'] / grouped_results['n_denominator_intensity']
+    else:
+        grouped_results['ratio'] = grouped_results['n_numerator_intensity'] / grouped_results['n_denominator_intensity']
 
-    # Write the DataFrame to a CSV file
-    output_path = os.path.join(args['outdir'], args['outfile'])
-    intensity_df.to_csv(output_path, index=False)
+    # Save the result to a new CSV file
+    grouped_results.to_csv(os.path.join(args['outdir'], 'modified_outfile.csv'), index=False)
 
-    # Plotting
-    sns.scatterplot(data=intensity_df, x='ook0', y='ratio', hue='Spot', palette='tab10')
-    plt.title('Ratio vs. ook0')
-    plt.xlabel('ook0')
-    plt.ylabel('Ratio')
+    # Display the resulting DataFrame with the modified columns
+    print(grouped_results)
+
+    # Group by 'index' and 'integer', then aggregate using the mean of 'ratio'
+    heatmap_data = grouped_results[grouped_results['ratio'] != '-'].groupby(['index', 'integer'])['ratio'].mean().unstack()
+
+    # Convert the data type of 'ratio' to float
+    heatmap_data = heatmap_data.astype(float)
+
+    # Save the result to a new CSV file
+    heatmap_data.to_csv(os.path.join(args['outdir'], 'heatmap_data.csv'), index=False)
+
+    # Create a heatmap of the calculated ratios using seaborn
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(heatmap_data, annot=True, cmap='viridis', fmt=".2f", cbar_kws={'label': 'Ratio'})
+    plt.title('Heatmap of Mean Ratio Values')
+    plt.xlabel('Integer')
+    plt.ylabel('Index')
     plt.show()
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     run()
 
 
