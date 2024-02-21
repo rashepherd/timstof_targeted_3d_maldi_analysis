@@ -142,12 +142,11 @@ def run():
     grouped_results = results.groupby(group_columns, as_index=False)[['numerator_intensity', 'denominator_intensity','IS_intensity']].sum()
     grouped_results.to_csv(os.path.join(args['outdir'], 'modified_outfile.csv'), index=False)
 
-    #Normalize intensities to internal standard
-    grouped_results['n_numerator_intensity'] = grouped_results['numerator_intensity'] / grouped_results['IS_intensity'] 
-    grouped_results['n_denominator_intensity'] = grouped_results['denominator_intensity'] / grouped_results['IS_intensity']
-
     # Calculate the ratio based on 'numerator_intensity' and 'denominator_intensity'
-    grouped_results['ratio'] = grouped_results['n_numerator_intensity'] / grouped_results['n_denominator_intensity']
+    grouped_results['ratio'] = grouped_results['numerator_intensity'] / grouped_results['denominator_intensity']
+
+    #normalize to internal standard
+    grouped_results['n_ratio'] = grouped_results['ratio'] / grouped_results['IS_intensity']
 
     # Save the result to a new CSV file
     grouped_results.to_csv(os.path.join(args['outdir'], 'modified_outfile.csv'), index=False)
@@ -156,7 +155,7 @@ def run():
     print(grouped_results)
 
     # Group by 'index' and 'integer', then aggregate using the mean of 'ratio'
-    heatmap_data = grouped_results[grouped_results['ratio'] != '-'].groupby(['index', 'integer'])['ratio'].mean().unstack()
+    heatmap_data = grouped_results[grouped_results['n_ratio'] != '-'].groupby(['index', 'integer'])['n_ratio'].mean().unstack()
 
     # Convert the data type of 'ratio' to float
     heatmap_data = heatmap_data.astype(float)
