@@ -140,15 +140,15 @@ def run():
         group_columns, as_index=False)['intensity'].transform('sum')
     results['IS_intensity'] = results[results['mz'] == args['IS_mz']].groupby(
             group_columns, as_index=False)['intensity'].transform('sum')
-    
+    print(results)
     #Normalize the 'numerator_intensity' and 'denominator_intensity' using the intensity of the internal standard
     results['n_numerator_intensity'] = results['numerator_intensity'] / results['IS_intensity']
     results['n_denominator_intensity'] = results['denominator_intensity'] / results['IS_intensity']
-
+    print(results)
     #Group again by 'Frame', 'Spot', 'index', and 'integer' 
     grouped_results = results.groupby(group_columns, as_index=False)[['n_numerator_intensity', 'n_denominator_intensity']].sum()
 
-    #Calculate the ration based on the normalized 'numerator_intensity' and 'denominator_intensity' 
+    #Calculate the ratio based on the normalized 'numerator_intensity' and 'denominator_intensity' 
     grouped_results['ratio'] = grouped_results['n_numerator_intensity'] / grouped_results['n_denominator_intensity']
     
     # Display the resulting DataFrame with the modified columns
