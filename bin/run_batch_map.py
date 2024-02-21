@@ -134,12 +134,9 @@ def run():
 
     # Group by 'Frame', 'Spot', 'index' and 'integer', and calculate sum of intensities for numerator, denominator, and internal standard if provided 
     group_columns = ['Frame', 'Spot', 'index', 'integer']
-    results['numerator_intensity'] = results[results['ook0'] == args['numerator_ook0']].groupby(
-        group_columns, as_index=False)['intensity'].transform('sum')
-    results['denominator_intensity'] = results[results['ook0'] == args['denominator_ook0']].groupby(
-        group_columns, as_index=False)['intensity'].transform('sum')
-    results['IS_intensity'] = results[results['mz'] == args['IS_mz']].groupby(
-            group_columns, as_index=False)['intensity'].transform('sum')
+    results['numerator_intensity'] = results[results['ook0'] == args['numerator_ook0']].groupby(group_columns, as_index=False)['intensity'].transform('sum')
+    results['denominator_intensity'] = results[results['ook0'] == args['denominator_ook0']].groupby(group_columns, as_index=False)['intensity'].transform('sum')
+    results['IS_intensity'] = results[results['mz'] == args['IS_mz']].groupby(group_columns, as_index=False)['intensity'].transform('sum')
     print(results)
     results.to_csv(os.path.join(args['outdir'], 'modified_outfile.csv'), index=False)
     
