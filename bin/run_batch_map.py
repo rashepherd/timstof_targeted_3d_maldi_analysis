@@ -137,9 +137,41 @@ def run():
     results['numerator_intensity'] = results[results['ook0'] == args['numerator_ook0']].groupby(group_columns, as_index=False)['intensity'].transform('sum')
     results['denominator_intensity'] = results[results['ook0'] == args['denominator_ook0']].groupby(group_columns, as_index=False)['intensity'].transform('sum')
     results['IS_intensity'] = results[results['mz'] == args['IS_mz']].groupby(group_columns, as_index=False)['intensity'].transform('sum')
+    
     #Group by 'Frame', 'Spot', 'index' and 'integer'
     grouped_results = results.groupby(group_columns, as_index=False)[['numerator_intensity', 'denominator_intensity','IS_intensity']].sum()
     grouped_results.to_csv(os.path.join(args['outdir'], 'modified_outfile.csv'), index=False)
+
+    #Normalize intensities to internal standard
+    grouped_results['n_numerator_intensity'] = grouped_results['numerator_intensity'] / grouped_results['IS_intensity'] 
+    grouped_results['n_denominator_intensity'] = grouped_results['denominator_intensity'] / grouped_results['IS_intensity']
+
+    # Calculate the ratio based on 'numerator_intensity' and 'denominator_intensity'
+    grouped_results['ratio'] = grouped_results['n_numerator_intensity'] / grouped_results['n_denominator_intensity']
+
+    # Save the result to a new CSV file
+    grouped_results.to_csv(os.path.join(args['outdir'], 'modified_outfile.csv'), index=False)
+
+    # Display the resulting DataFrame with the modified columns
+    print(grouped_results)
+
+    # Group by 'index' and 'integer', then aggregate using the mean of 'ratio'
+    heatmap_data = grouped_results[grouped_results['ratio'] != '-'].groupby(['index', 'integer'])['ratio'].mean().unstack()
+
+    # Convert the data type of 'ratio' to float
+    heatmap_data = heatmap_data.astype(float)
+
+    # Save the result to a new CSV file
+    heatmap_data.to_csv(os.path.join(args['outdir'], 'heatmap_data.csv'), index=False)
+
+    # Create a heatmap of the calculated ratios using seaborn
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(heatmap_data, annot=True, cmap='viridis', fmt=".2f", cbar_kws={'label': 'Ratio'})
+    plt.title('Heatmap of Mean Ratio Values')
+    plt.xlabel('Integer')
+    plt.ylabel('Index')
+    plt.show()
+
 if __name__ == "__main__":
     run()
 
