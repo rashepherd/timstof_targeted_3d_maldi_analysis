@@ -150,16 +150,23 @@ def run():
         results['n_denominator_intensity'] = np.log1p(results['denominator_intensity'])
 
     # Group by 'Frame', 'Spot', 'index' and 'integer', and calculate sum of intensities for numerator and denominator, and internal standard if provided.
+    group_columns = ['Frame', 'Spot', 'index', 'integer']
     if args['IS_mz'] is not None:
         grouped_results = results.groupby(group_columns, as_index=False)[['n_numerator_intensity', 'n_denominator_intensity', 'IS_intensity']].sum()
+        # Rename columns accordingly
+        grouped_results.rename(columns={'n_numerator_intensity': 'numerator_intensity',
+                                        'n_denominator_intensity': 'denominator_intensity'}, inplace=True)
     else:
         grouped_results = results.groupby(group_columns, as_index=False)[['n_numerator_intensity', 'n_denominator_intensity']].sum()
+        # Rename columns accordingly
+        grouped_results.rename(columns={'n_numerator_intensity': 'numerator_intensity',
+                                        'n_denominator_intensity': 'denominator_intensity'}, inplace=True)
 
     # Conditionally define the ratio column based on internal standard normalization
     if args['IS_mz'] is not None:
-        grouped_results['ratio'] = grouped_results['n_numerator_intensity'] / grouped_results['n_denominator_intensity']
+        grouped_results['ratio'] = grouped_results['numerator_intensity'] / grouped_results['denominator_intensity']
     else:
-        grouped_results['ratio'] = grouped_results['n_numerator_intensity'] / grouped_results['n_denominator_intensity']
+        grouped_results['ratio'] = grouped_results['numerator_intensity'] / grouped_results['denominator_intensity']
 
     # Save the result to a new CSV file
     grouped_results.to_csv(os.path.join(args['outdir'], 'modified_outfile.csv'), index=False)
@@ -186,5 +193,6 @@ def run():
 
 if __name__ == "__main__":
     run()
+
 
 
