@@ -141,6 +141,8 @@ def run():
     results['IS_intensity'] = results[results['mz'] == args['IS_mz']].groupby(
             group_columns, as_index=False)['intensity'].transform('sum')
     print(results)
+    results.to_csv(os.path.join(args['outdir'], 'modified_outfile.csv'), index=False)
+    
     #Normalize the 'numerator_intensity' and 'denominator_intensity' using the intensity of the internal standard
     results['n_numerator_intensity'] = results['numerator_intensity'] / results['IS_intensity']
     results['n_denominator_intensity'] = results['denominator_intensity'] / results['IS_intensity']
