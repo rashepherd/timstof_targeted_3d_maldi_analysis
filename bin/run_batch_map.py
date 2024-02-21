@@ -146,7 +146,7 @@ def run():
     grouped_results['ratio'] = grouped_results['numerator_intensity'] / grouped_results['denominator_intensity']
 
     #normalize to internal standard
-    grouped_results['n_ratio'] = grouped_results['ratio'] / grouped_results['IS_intensity']
+    grouped_results['n_ratio'] = (grouped_results['ratio'] / grouped_results['IS_intensity'])*1000
 
     # Save the result to a new CSV file
     grouped_results.to_csv(os.path.join(args['outdir'], 'modified_outfile.csv'), index=False)
@@ -165,7 +165,7 @@ def run():
 
     # Create a heatmap of the calculated ratios using seaborn
     plt.figure(figsize=(10, 8))
-    sns.heatmap(heatmap_data, annot=True, cmap='viridis', fmt=".2f", cbar_kws={'label': 'Ratio'})
+    sns.heatmap(heatmap_data, annot=True, cmap='viridis', fmt=".2f", cbar_kws={'label': 'Normalized Ratio'})
     plt.title('Heatmap of Mean Ratio Values')
     plt.xlabel('Integer')
     plt.ylabel('Index')
