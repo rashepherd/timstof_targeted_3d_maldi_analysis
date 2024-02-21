@@ -143,11 +143,11 @@ def run():
     
     # If feature for internal standard is defined, normalize the 'numerator_intensity' and 'denominator_intensity'
     if args['IS_mz'] is not None:
-        results['n_numerator_intensity'] = np.log1p(results['numerator_intensity'] / results['IS_intensity'])
-        results['n_denominator_intensity'] = np.log1p(results['denominator_intensity'] / results['IS_intensity'])
+        results['n_numerator_intensity'] = np.sqrt(results['numerator_intensity'] / results['IS_intensity'])
+        results['n_denominator_intensity'] = np.sqrt(results['denominator_intensity'] / results['IS_intensity'])
     else:
-        results['n_numerator_intensity'] = np.log1p(results['numerator_intensity'])
-        results['n_denominator_intensity'] = np.log1p(results['denominator_intensity'])
+        results['n_numerator_intensity'] = np.sqrt(results['numerator_intensity'])
+        results['n_denominator_intensity'] = np.sqrt(results['denominator_intensity'])
 
     # Group by 'Frame', 'Spot', 'index' and 'integer', and calculate sum of intensities for numerator and denominator, and internal standard if provided.
     group_columns = ['Frame', 'Spot', 'index', 'integer']
@@ -193,6 +193,7 @@ def run():
 
 if __name__ == "__main__":
     run()
+
 
 
 
