@@ -136,9 +136,10 @@ def run():
     group_columns = ['Frame', 'Spot', 'index', 'integer']
     results['numerator_intensity'] = results[results['ook0'] == args['numerator_ook0']].groupby(group_columns, as_index=False)['intensity'].transform('sum')
     results['denominator_intensity'] = results[results['ook0'] == args['denominator_ook0']].groupby(group_columns, as_index=False)['intensity'].transform('sum')
-    print(results)
-    results.to_csv(os.path.join(args['outdir'], 'modified_outfile.csv'), index=False)
-
+    results['IS_intensity'] = results[results['mz'] == args['IS_mz']].groupby(group_columns, as_index=False)['intensity'].transform('sum')
+    #Group by 'Frame', 'Spot', 'index' and 'integer'
+    grouped_results = results.groupby(group_columns, as_index=False)[['numerator_intensity', 'denominator_intensity','IS_intensity']].sum()
+    grouped_results.to_csv(os.path.join(args['outdir'], 'modified_outfile.csv'), index=False)
 if __name__ == "__main__":
     run()
 
